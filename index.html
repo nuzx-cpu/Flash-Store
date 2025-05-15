@@ -1,44 +1,173 @@
-<!DOCTYPE html><html lang="pt-br">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Flash Store – Baixe Já</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteio - Conta Brawl Stars</title>
+  <style>
+    body {
+      background-color: #2c003e;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background-color: #3f0a59;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+    input, button {
+      padding: 0.7rem;
+      margin: 0.5rem 0;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #a44de6;
+      color: white;
+      cursor: pointer;
+    }
+    #mensagem {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    #roleta {
+      margin-top: 2rem;
+      border: 5px solid white;
+      border-radius: 50%;
+      width: 300px;
+      height: 300px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      overflow: hidden;
+      transition: transform 5s ease-out;
+    }
+    .roleta-item {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      transform-origin: 50% 150px;
+    }
+    #vencedorDisplay {
+      font-size: 2rem;
+      color: orange;
+      margin-top: 3rem;
+      display: none;
+      animation: explode 1s ease-out infinite alternate;
+    }
+    @keyframes explode {
+      from { text-shadow: 0 0 10px red; }
+      to { text-shadow: 0 0 30px yellow; }
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white font-sans">  <header class="flex items-center justify-between p-6">
-    <h1 class="text-2xl font-bold">Flash Store</h1>
-    <a href="#download" class="bg-yellow-400 text-black px-4 py-2 rounded-full font-semibold hover:bg-yellow-500 transition">
-      Baixe Já
-    </a>
-  </header>  <main class="grid md:grid-cols-2 gap-10 items-center px-8 md:px-20 py-16">
-    <!-- Logo da Flash Store -->
-    <div class="flex justify-center md:justify-end">
-      <img 
-        src="https://cdn.discordapp.com/attachments/1370791271035048149/1370839031004401936/common_sync7c5216fe8ba250d4b89aedd6c77e0b83_20250510064437021_realesr-general-x4v3_4.jpg?ex=6820f4d5&is=681fa355&hm=bdfaf4ca428b5236aa92eec64911619dc2597b9a324f81a88c74702b3abd788b" 
-        alt="Logo Flash Store" 
-        class="w-32 h-32 md:w-40 md:h-40 object-contain rounded-xl shadow-lg transform hover:scale-105 transition duration-300"
-      >
-    </div><!-- Texto e CTA -->
-<div class="text-center md:text-left">
-  <h2 class="text-4xl font-extrabold mb-4 leading-tight">
-    Publique e Ganhe Dinheiro<br/>
-    com Seus Apps e Jogos
-  </h2>
-  <p class="text-gray-300 text-lg mb-6">
-    Com o Flash Store, você publica seus projetos e ativa a <strong class="text-yellow-400">Renda Extra</strong>. Compartilhe e receba até <strong>R$ 70/mês</strong> ou mais!
-  </p>
-  <a href="#download" class="inline-block bg-yellow-400 text-black px-6 py-3 rounded-full text-lg font-bold shadow-md hover:bg-yellow-500 transition">
-    Baixe Agora
-  </a>
-</div>
+<body>
+  <div class="container" id="mainContainer">
+    <h1>Sorteio de Conta Brawl Stars</h1>
+    <p>Para participar, entre no nosso Discord, verifique-se e inscreva-se nos canais do YouTube. Após isso, abra um ticket para receber seu código.</p>
+    <p>Sorteio será <strong>amanhã às 20h</strong>.</p><h3>Insira seu código e nick do Discord:</h3>
+<input type="text" id="codigo" placeholder="Código fornecido">
+<input type="text" id="nick" placeholder="Seu nick do Discord">
+<button onclick="validarCodigo()">Participar</button>
+<div id="mensagem"></div>
 
-  </main>  <!-- Seção Discord -->  <section id="download" class="bg-gray-800 text-center py-12 px-6">
-    <h3 class="text-2xl font-bold mb-4">Junte-se à Comunidade</h3>
-    <p class="text-gray-300 mb-6">Tire dúvidas, compartilhe ideias e receba apoio no nosso Discord oficial.</p>
-    <a href="https://discord.gg/pPx7g23V" target="_blank" class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-indigo-700 transition">
-      Entrar no Discord
-    </a>
-  </section>  <footer class="bg-black text-center text-gray-500 py-6 text-sm">
-    &copy; 2025 Flash Store – Todos os direitos reservados.
-  </footer></body>
+<div id="roleta"></div>
+
+  </div>  <div id="vencedorDisplay"></div>  <script>
+    const codigosValidos = [
+      "A1KD7-EX52P","7JX9Z-QW4NA","XK8PV-YZ7C3","W2LNM-KH85B","93LFC-X9WZT",
+      "VPKX4-MNZ73","TUL53-QA91X","LZNC7-WMB84","FR8YX-PQKJ2","6EMAZ-DH53T",
+      "EYU23-FNV49","AGVNM-YKX82","TB42L-WMYXP","5C93K-EN8ZT","XZQMW-R6Y71",
+      "MAYV2-JPDQZ","LWUK3-NCZTX","KQFY9-GM28P","QJXK4-FTW96","RJ9DZ-XLMC5",
+      "UVN37-PAFZT","NTYM4-JRQE2","CXYA6-KLZWT","9EKPJ-FX38N","HWQZ3-RB97M",
+      "JYAL8-WKCTQ","FKW3L-9YZRM","LMA7X-JTQCP","PYXZ6-RW8MT","RFTV5-ZNLQY",
+      "8MXK2-PYWJE","DZNWC-X4LTQ","5RQ8M-HXZET","GWTN3-JAZYL","XLD72-QKCEP",
+      "KUY83-NFVZQ","WBMY9-LHCP2","MTFQV-KLRJX","CNP94-TZLQY","QN7YB-MJWF3",
+      "HZPE3-NKJ2V","JKYQP-XM84T","NFXZL-KT7PM","PRLYT-JZ69W","9WQCT-XA5EY",
+      "XU43A-LQNYT","WYC8K-JRMT2","ZAQT9-HWXKC","KJXPM-RCTZ7"
+    ];
+
+    const participantes = [];
+
+    function atualizarRoleta() {
+      const roleta = document.getElementById("roleta");
+      roleta.innerHTML = "";
+      const total = participantes.length;
+      participantes.forEach((p, i) => {
+        const item = document.createElement("div");
+        item.className = "roleta-item";
+        item.style.transform = `rotate(${(360 / total) * i}deg)`;
+        item.innerText = p.nick;
+        roleta.appendChild(item);
+      });
+    }
+
+    function validarCodigo() {
+      const codigo = document.getElementById('codigo').value.trim();
+      const nick = document.getElementById('nick').value.trim();
+      const mensagem = document.getElementById('mensagem');
+
+      if (!codigo || !nick) {
+        mensagem.innerText = "Preencha todos os campos.";
+        return;
+      }
+
+      if (!codigosValidos.includes(codigo)) {
+        mensagem.innerText = "Código inválido!";
+        return;
+      }
+
+      if (participantes.length >= 50) {
+        mensagem.innerText = "As 50 vagas já foram preenchidas.";
+        return;
+      }
+
+      participantes.push({ nick, codigo });
+      mensagem.innerText = "Inscrição confirmada! Boa sorte.";
+      const index = codigosValidos.indexOf(codigo);
+      if (index > -1) codigosValidos.splice(index, 1);
+
+      atualizarRoleta();
+    }
+
+    function sortear() {
+      const roleta = document.getElementById("roleta");
+      const vencedor = participantes[Math.floor(Math.random() * participantes.length)];
+
+      // Simula a roleta girando
+      const voltas = 15;
+      const angulo = Math.floor(Math.random() * 360) + 360 * voltas;
+      roleta.style.transform = `rotate(${angulo}deg)`;
+
+      // Espera o giro e mostra o vencedor com destaque
+      setTimeout(() => {
+        document.getElementById("mainContainer").style.display = "none";
+        const display = document.getElementById("vencedorDisplay");
+        display.innerText = `VENCEDOR: ${vencedor.nick}!`;
+        display.style.display = "block";
+      }, 5200);
+    }
+
+    const agora = new Date();
+    const dataSorteio = new Date();
+    dataSorteio.setDate(agora.getDate() + 1);
+    dataSorteio.setHours(20, 0, 0, 0);
+    const tempoRestante = dataSorteio - agora;
+
+    setTimeout(() => {
+      if (participantes.length > 0) {
+        sortear();
+      } else {
+        alert("Nenhum participante válido foi registrado para o sorteio.");
+      }
+    }, tempoRestante);
+  </script></body>
 </html>
