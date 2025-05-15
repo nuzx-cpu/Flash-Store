@@ -37,14 +37,17 @@
       margin-top: 1rem;
       font-weight: bold;
     }
-    #roleta {
-      margin-top: 2rem;
-      border: 5px solid white;
-      border-radius: 50%;
+    .roleta-container {
+      position: relative;
       width: 300px;
       height: 300px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 2rem auto;
+    }
+    #roleta {
+      border: 5px solid white;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
       position: relative;
       overflow: hidden;
       transition: transform 5s ease-out;
@@ -55,6 +58,17 @@
       text-align: center;
       font-size: 0.9rem;
       transform-origin: 50% 150px;
+    }
+    .seta {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 30px solid yellow;
     }
     #vencedorDisplay {
       font-size: 2rem;
@@ -79,7 +93,10 @@
 <button onclick="validarCodigo()">Participar</button>
 <div id="mensagem"></div>
 
-<div id="roleta"></div>
+<div class="roleta-container">
+  <div class="seta"></div>
+  <div id="roleta"></div>
+</div>
 
   </div>  <div id="vencedorDisplay"></div>  <script>
     const codigosValidos = [
@@ -96,6 +113,13 @@
     ];
 
     const participantes = [];
+
+    window.onload = () => {
+      const nickSalvo = localStorage.getItem("nick");
+      if (nickSalvo) {
+        document.getElementById("nick").value = nickSalvo;
+      }
+    }
 
     function atualizarRoleta() {
       const roleta = document.getElementById("roleta");
@@ -130,6 +154,7 @@
         return;
       }
 
+      localStorage.setItem("nick", nick);
       participantes.push({ nick, codigo });
       mensagem.innerText = "Inscrição confirmada! Boa sorte.";
       const index = codigosValidos.indexOf(codigo);
@@ -142,12 +167,10 @@
       const roleta = document.getElementById("roleta");
       const vencedor = participantes[Math.floor(Math.random() * participantes.length)];
 
-      // Simula a roleta girando
       const voltas = 15;
       const angulo = Math.floor(Math.random() * 360) + 360 * voltas;
       roleta.style.transform = `rotate(${angulo}deg)`;
 
-      // Espera o giro e mostra o vencedor com destaque
       setTimeout(() => {
         document.getElementById("mainContainer").style.display = "none";
         const display = document.getElementById("vencedorDisplay");
